@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
 	QSurfaceFormat fmt;
 	fmt.setRenderableType(QSurfaceFormat::OpenGL);
 	fmt.setProfile(QSurfaceFormat::CoreProfile);
-	fmt.setVersion(4, 4);
+	fmt.setVersion(4, 5);
 
 	Window window;
 	window.setFormat(fmt);

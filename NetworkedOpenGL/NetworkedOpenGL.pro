@@ -1,6 +1,6 @@
 QT += core gui
 
-CONFIG += c++17
+CONFIG += c++1z
 
 TARGET = NetworkedOpenGL
 CONFIG += console
@@ -23,4 +23,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 HEADERS += \
-    window.h
+    window.h \
+    vertex.h
+
+RESOURCES += \
+    resources.qrc
+
+DISTFILES += \
+    Shaders/basic.vert \
+    Shaders/basic.frag
