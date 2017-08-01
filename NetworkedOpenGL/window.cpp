@@ -1,18 +1,13 @@
 #include "window.h"
 #include "vertex.h"
+#include "cube.h"
 
 #include <QDebug>
-
-// 2D Triangle
-static const Vertex vertices[] {
-  Vertex( QVector3D( 0.00f,  0.75f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f) ),
-  Vertex( QVector3D( 0.75f, -0.75f, 1.0f), QVector3D(0.0f, 1.0f, 0.0f) ),
-  Vertex( QVector3D(-0.75f, -0.75f, 1.0f), QVector3D(0.0f, 0.0f, 1.0f) )
-};
 
 /***********************************************************************************/
 Window::Window() {
 	makeCurrent();
+	m_transform.translate(0.0f, 0.0f, -5.0f);
 }
 
 /***********************************************************************************/
@@ -27,6 +22,7 @@ void Window::initializeGL() {
 	connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
 	printContextInfo();
 
+	glEnable(GL_CULL_FACE);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	checkGLerror(m_shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/basic.vert"), m_shaderProgram);
@@ -34,13 +30,17 @@ void Window::initializeGL() {
 	checkGLerror(m_shaderProgram.link(), m_shaderProgram);
 	checkGLerror(m_shaderProgram.bind(), m_shaderProgram);
 
-	m_VBOplayer1.create();
-	m_VBOplayer1.bind();
-	m_VBOplayer1.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	m_VBOplayer1.allocate(vertices, sizeof(vertices));
+	m_vbo.create();
+	m_vbo.bind();
+	m_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
+	m_vbo.allocate(vertices, sizeof(vertices));
 
-	m_VAOplayer1.create();
-	m_VAOplayer1.bind();
+	m_uniforms.emplace(std::make_pair<std::string, int>("modelMatrix", m_shaderProgram.uniformLocation("modelMatrix")));
+	m_uniforms.emplace(std::make_pair<std::string, int>("projectionMatrix", m_shaderProgram.uniformLocation("projectionMatrix")));
+
+	m_vao.create();
+	m_vao.bind();
+
 	m_shaderProgram.enableAttributeArray(0);
 	m_shaderProgram.enableAttributeArray(1);
 	m_shaderProgram.setAttributeBuffer(0, GL_FLOAT, Vertex::PositionOffset(), 3, Vertex::Stride());
@@ -53,7 +53,8 @@ void Window::initializeGL() {
 
 /***********************************************************************************/
 void Window::resizeGL(int width, int height) {
-
+	m_projection.setToIdentity();
+	m_projection.perspective(45.0f, width / static_cast<float>(height), 1.0f, 100.0f);
 }
 
 /***********************************************************************************/
@@ -61,21 +62,21 @@ void Window::paintGL() {
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	m_shaderProgram.bind();
-	{
-		m_VAOplayer1.bind();
-		glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(vertices[0]));
-	}
+	m_shaderProgram.setUniformValue(m_uniforms.at("projectionMatrix"), m_projection);
+	m_shaderProgram.setUniformValue(m_uniforms.at("modelMatrix"), m_transform.toMatrix());
+	m_vao.bind();
+	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(vertices[0]));
 }
 
 /***********************************************************************************/
 void Window::shutdownGL() {
-	m_VBOplayer1.destroy();
-	m_VAOplayer1.destroy();
 }
 
 /***********************************************************************************/
 void Window::update() {
+	m_transform.rotate(1.0f, QVector3D(0.4f, 0.3f, 0.3f));
 
+	QOpenGLWindow::update();
 }
 
 /***********************************************************************************/

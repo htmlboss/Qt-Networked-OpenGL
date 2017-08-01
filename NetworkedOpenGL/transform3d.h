@@ -11,32 +11,32 @@ public:
 	Transform3D() noexcept : m_dirty{true}, m_scale{1.0f, 1.0f, 1.0f} {}
 
 	// Transform By (Add/Scale)
-	inline Transform3D& translate(const QVector3D& pos) noexcept;
-	inline Transform3D& translate(const float x, const float y, const float z) noexcept;
+	 void translate(const QVector3D& pos) noexcept;
+	 void translate(const float x, const float y, const float z) noexcept;
 
-	inline Transform3D& scale(const QVector3D& scale) noexcept;
-	inline Transform3D& scale(const float x, const float y, const float z) noexcept;
-	inline Transform3D& scale(const float factor) noexcept;
+	 void scale(const QVector3D& scale) noexcept;
+	 void scale(const float x, const float y, const float z) noexcept;
+	 void scale(const float factor) noexcept;
 
-	inline Transform3D& rotate(const QQuaternion& quat) noexcept;
-	inline Transform3D& rotate(const float angle, const QVector3D& axis) noexcept;
-	inline Transform3D& rotate(const float angle, const float x, const float y, const float z) noexcept;
+	 void rotate(const QQuaternion& quat) noexcept;
+	 void rotate(const float angle, const QVector3D& axis) noexcept;
+	 void rotate(const float angle, const float x, const float y, const float z) noexcept;
 
-	inline Transform3D& grow(const QVector3D& factor) noexcept;
-	inline Transform3D& grow(const float x, const float y, const float z) noexcept;
-	inline Transform3D& grow(const float factor) noexcept;
+	 void grow(const QVector3D& factor) noexcept;
+	 void grow(const float x, const float y, const float z) noexcept;
+	 void grow(const float factor) noexcept;
 
 	// Transform To (Setters)
-	inline Transform3D& setTranslation(const QVector3D& pos) noexcept;
-	inline Transform3D& setTranslation(const float x, const float y, const float z) noexcept;
+	 void setTranslation(const QVector3D& pos) noexcept;
+	 void setTranslation(const float x, const float y, const float z) noexcept;
 
-	inline Transform3D& setScale(const QVector3D& scale) noexcept;
-	inline Transform3D& setScale(const float x, const float y, const float z) noexcept;
-	inline Transform3D& setScale(const float factor) noexcept;
+	 void setScale(const QVector3D& scale) noexcept;
+	 void setScale(const float x, const float y, const float z) noexcept;
+	 void setScale(const float factor) noexcept;
 
-	inline Transform3D& setRotation(const QQuaternion& quat) noexcept;
-	inline Transform3D& setRotation(const float angle, const QVector3D& axis) noexcept;
-	inline Transform3D& setRotation(const float angle, const float x, const float y, const float z) noexcept;
+	 void setRotation(const QQuaternion& quat) noexcept;
+	 void setRotation(const float angle, const QVector3D& axis) noexcept;
+	 void setRotation(const float angle, const float x, const float y, const float z) noexcept;
 
 	// Getters
 	auto getTranslation() const noexcept { return m_translation; }

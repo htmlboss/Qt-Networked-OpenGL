@@ -3,9 +3,14 @@
 
 #include <QOpenGLWindow>
 #include <QOpenGLFunctions_4_5_Core>
-#include <QOpenGLVertexArrayObject>
-#include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLBuffer>
+#include <QOpenGLVertexArrayObject>
+#include <QMatrix4x4>
+
+#include <unordered_map>
+
+#include "transform3d.h"
 
 class Window :	public QOpenGLWindow,
 				protected QOpenGLFunctions_4_5_Core {
@@ -24,10 +29,15 @@ protected slots:
 	void update();
 
 private:
-	QOpenGLBuffer m_VBOplayer1;
-	QOpenGLVertexArrayObject m_VAOplayer1;
+	QOpenGLBuffer m_vbo;
+	QOpenGLVertexArrayObject m_vao;
+
+	QMatrix4x4 m_projection;
+
+	Transform3D m_transform;
 
 	QOpenGLShaderProgram m_shaderProgram;
+	std::unordered_map<std::string, int> m_uniforms;
 
 	bool m_hasErrors{false};
 

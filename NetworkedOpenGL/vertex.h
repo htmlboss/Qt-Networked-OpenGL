@@ -4,7 +4,7 @@
 #include <QVector3D>
 
 struct Vertex {
-	constexpr Vertex();
+	constexpr Vertex() = default;
 	constexpr explicit Vertex(const QVector3D& position) : Position{position} {}
 	constexpr Vertex(const QVector3D& position, const QVector3D& color) : Position{position}, Color{color} {}
 

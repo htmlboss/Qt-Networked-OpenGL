@@ -10,7 +10,8 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     window.cpp \
-    transform3d.cpp
+    transform3d.cpp \
+    glmodel.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -26,7 +27,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 HEADERS += \
     window.h \
     vertex.h \
-    transform3d.h
+    transform3d.h \
+    glmodel.h \
+    cube.h
 
 RESOURCES += \
     resources.qrc
