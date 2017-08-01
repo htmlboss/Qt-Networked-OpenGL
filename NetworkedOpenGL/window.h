@@ -11,6 +11,7 @@
 #include <unordered_map>
 
 #include "transform3d.h"
+#include "camera.h"
 
 class Window :	public QOpenGLWindow,
 				protected QOpenGLFunctions_4_5_Core {
@@ -28,12 +29,19 @@ public:
 protected slots:
 	void update();
 
+protected:
+	void keyPressEvent(QKeyEvent* event);
+	void keyReleaseEvent(QKeyEvent* event);
+	void mousePressEvent(QMouseEvent* event);
+	void mouseReleaseEvent(QMouseEvent* event);
+
 private:
 	QOpenGLBuffer m_vbo;
 	QOpenGLVertexArrayObject m_vao;
 
 	QMatrix4x4 m_projection;
 
+	Camera m_camera;
 	Transform3D m_transform;
 
 	QOpenGLShaderProgram m_shaderProgram;

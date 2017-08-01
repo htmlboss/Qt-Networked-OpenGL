@@ -2,6 +2,17 @@ QT += core gui
 
 CONFIG += c++1z
 
+linux-g++ {
+    QMAKE_CXXFLAGS += -fopenmp -march=native
+    QMAKE_LFLAGS +=  -fopenmp -march=native
+}
+
+*-msvc2017 {
+    QMAKE_CXXFLAGS += -openmp
+    QMAKE_LFLAGS +=  -openmp
+}
+
+
 TARGET = NetworkedOpenGL
 CONFIG += console
 CONFIG -= app_bundle
@@ -11,7 +22,9 @@ TEMPLATE = app
 SOURCES += main.cpp \
     window.cpp \
     transform3d.cpp \
-    glmodel.cpp
+    glmodel.cpp \
+    input.cpp \
+    camera.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -29,7 +42,9 @@ HEADERS += \
     vertex.h \
     transform3d.h \
     glmodel.h \
-    cube.h
+    cube.h \
+    input.h \
+    camera.h
 
 RESOURCES += \
     resources.qrc
