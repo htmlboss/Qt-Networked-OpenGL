@@ -4,6 +4,9 @@
 
 #ifdef __GNUC__
 #include <parallel/algorithm>
+#elif _WIN32
+#include <ppl.h>
+#include <algorithm>l
 #else
 #include <algorithm>
 #endif
@@ -91,6 +94,8 @@ static inline void Update(Container& container) {
 	// Update existing data
 #ifdef __GNUC__
 	__gnu_parallel::for_each(container.begin(), container.end(), &UpdateStates<TPair>);
+#elif _WIN32
+	concurrency::parallel_for_each(container.begin(), container.end(), &UpdateStates<TPair>);
 #else
 	std::for_each(container.begin(), container.end(), &UpdateStates<TPair>);
 #endif

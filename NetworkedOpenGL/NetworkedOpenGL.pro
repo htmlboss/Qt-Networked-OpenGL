@@ -8,8 +8,7 @@ linux-g++ {
 }
 
 *-msvc2017 {
-    QMAKE_CXXFLAGS += -openmp
-    QMAKE_LFLAGS +=  -openmp
+    QMAKE_CXXFLAGS += -opennmp -EHsc
 }
 
 
@@ -22,7 +21,6 @@ TEMPLATE = app
 SOURCES += main.cpp \
     window.cpp \
     transform3d.cpp \
-    glmodel.cpp \
     input.cpp \
     camera.cpp
 
@@ -41,7 +39,6 @@ HEADERS += \
     window.h \
     vertex.h \
     transform3d.h \
-    glmodel.h \
     cube.h \
     input.h \
     camera.h
