@@ -5,7 +5,7 @@
 #include <QCursor>
 
 class Input {
-	friend class Window;
+	friend class OGLWidget;
 public:
 	enum class InputState : unsigned int {
 		Invalid,

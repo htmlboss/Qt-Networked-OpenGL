@@ -1,4 +1,4 @@
-#include "window.h"
+#include "oglwidget.h"
 #include "input.h"
 #include "player.h"
 
@@ -6,18 +6,25 @@
 #include <QDebug>
 
 /***********************************************************************************/
-Window::Window() {
-	makeCurrent();
+OGLWidget::OGLWidget(QWidget* parent) {
+	QSurfaceFormat fmt;
+	fmt.setRenderableType(QSurfaceFormat::OpenGL);
+	fmt.setProfile(QSurfaceFormat::CoreProfile);
+	fmt.setSamples(4);
+	fmt.setVersion(4, 5);
+	fmt.setSwapInterval(1);
+
+	setFormat(fmt);
 }
 
 /***********************************************************************************/
-Window::~Window() {
+OGLWidget::~OGLWidget() {
 	makeCurrent();
 	shutdownGL();
 }
 
 /***********************************************************************************/
-void Window::initializeGL() {
+void OGLWidget::initializeGL() {
 	if (!initializeOpenGLFunctions()) {
 		throw std::runtime_error("Failed to initalise OpenGL functions.");
 	}
@@ -41,7 +48,7 @@ void Window::initializeGL() {
 	checkGLerror(m_shaderProgram.bind(), m_shaderProgram);
 
 	m_player = std::make_unique<Player>("Player");
-	m_player->Translate(QVector3D(0.0f, 0.0f, -2.0f));
+	m_player->Translate(QVector3D(0.0f, 0.0f, -4.0f));
 
 	m_uniforms.emplace(std::make_pair<std::string, int>("modelMatrix", m_shaderProgram.uniformLocation("modelMatrix")));
 	m_uniforms.emplace(std::make_pair<std::string, int>("projectionMatrix", m_shaderProgram.uniformLocation("projectionMatrix")));
@@ -53,13 +60,13 @@ void Window::initializeGL() {
 }
 
 /***********************************************************************************/
-void Window::resizeGL(int width, int height) {
+void OGLWidget::resizeGL(int width, int height) {
 	m_projection.setToIdentity();
 	m_projection.perspective(45.0f, width / static_cast<float>(height), 1.0f, 100.0f);
 }
 
 /***********************************************************************************/
-void Window::paintGL() {
+void OGLWidget::paintGL() {
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	m_shaderProgram.bind();
@@ -71,11 +78,11 @@ void Window::paintGL() {
 }
 
 /***********************************************************************************/
-void Window::shutdownGL() {
+void OGLWidget::shutdownGL() {
 }
 
 /***********************************************************************************/
-void Window::update() {
+void OGLWidget::update() {
 
 	Input::update();
 
@@ -110,19 +117,15 @@ void Window::update() {
 			translation += m_camera.up();
 		}
 		m_camera.translate(transSpeed * translation);
-	}
-
-	// Will open the network config dialog box (also add check if the window is open)
-	if (Input::keyPressed(Qt::Key_Control) && Input::keyPressed(Qt::Key_C)) {
-		qDebug() << "test";
+		m_player->Translate(transSpeed * translation);
 	}
 
 	// Schedule window update
-	QOpenGLWindow::update();
+	QOpenGLWidget::update();
 }
 
 /***********************************************************************************/
-void Window::keyPressEvent(QKeyEvent* event) {
+void OGLWidget::keyPressEvent(QKeyEvent* event) {
 	if (event->isAutoRepeat()) {
 		event->ignore();
 		return;
@@ -132,7 +135,7 @@ void Window::keyPressEvent(QKeyEvent* event) {
 }
 
 /***********************************************************************************/
-void Window::keyReleaseEvent(QKeyEvent* event) {
+void OGLWidget::keyReleaseEvent(QKeyEvent* event) {
 	if (event->isAutoRepeat()) 	{
 		event->ignore();
 		return;
@@ -142,17 +145,17 @@ void Window::keyReleaseEvent(QKeyEvent* event) {
 }
 
 /***********************************************************************************/
-void Window::mousePressEvent(QMouseEvent* event) {
+void OGLWidget::mousePressEvent(QMouseEvent* event) {
 	Input::registerMousePress(event->button());
 }
 
 /***********************************************************************************/
-void Window::mouseReleaseEvent(QMouseEvent* event) {
+void OGLWidget::mouseReleaseEvent(QMouseEvent* event) {
 	Input::registerMouseRelease(event->button());
 }
 
 /***********************************************************************************/
-void Window::printContextInfo() {
+void OGLWidget::printContextInfo() {
 	QString glType;
 	QString glVersion;
 	QString glProfile;
@@ -175,7 +178,7 @@ void Window::printContextInfo() {
 }
 
 /***********************************************************************************/
-void Window::checkGLerror(const bool result, const QOpenGLShaderProgram& pgrm) {
+void OGLWidget::checkGLerror(const bool result, const QOpenGLShaderProgram& pgrm) {
 	if (!result) {
 		m_hasErrors = true;
 		qDebug() << "Shader error: " << pgrm.log();

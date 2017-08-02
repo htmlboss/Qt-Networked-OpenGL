@@ -1,4 +1,4 @@
-QT += core gui
+QT += core gui network widgets
 
 CONFIG += c++1z
 
@@ -19,11 +19,13 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    window.cpp \
     transform3d.cpp \
     input.cpp \
     camera.cpp \
-    player.cpp
+    player.cpp \
+    serverdialog.cpp \
+    mainwindow.cpp \
+    oglwidget.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -37,13 +39,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 HEADERS += \
-    window.h \
     vertex.h \
     transform3d.h \
     cube.h \
     input.h \
     camera.h \
-    player.h
+    player.h \
+    serverdialog.h \
+    mainwindow.h \
+    oglwidget.h
 
 RESOURCES += \
     resources.qrc
@@ -51,3 +55,7 @@ RESOURCES += \
 DISTFILES += \
     Shaders/basic.vert \
     Shaders/basic.frag
+
+FORMS += \
+    serverdialog.ui \
+    mainwindow.ui
