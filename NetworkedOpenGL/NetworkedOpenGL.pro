@@ -8,7 +8,7 @@ linux-g++ {
 }
 
 *-msvc2017 {
-    QMAKE_CXXFLAGS += -opennmp -EHsc
+    QMAKE_CXXFLAGS += -opennmp -EHsc -std:c++latest
 }
 
 

@@ -13,13 +13,8 @@ Player::Player(const std::experimental::string_view name) : m_name{name} {
 
 	init();
 }
-
-/***********************************************************************************/
-void Player::Translate(const QVector3D& pos) {
-	m_position.translate(pos);
-}
-
 #else
+
 /***********************************************************************************/
 Player::Player(const std::string_view name) : m_name{name} {
 	// Each instance of Player needs to call this >.>
@@ -32,6 +27,11 @@ Player::Player(const std::string_view name) : m_name{name} {
 	m_position.translate(1.0f, 0.0f, -7.5f);
 }
 #endif
+
+/***********************************************************************************/
+void Player::Translate(const QVector3D& pos) {
+	m_position.translate(pos);
+}
 
 /***********************************************************************************/
 void Player::Draw() {
