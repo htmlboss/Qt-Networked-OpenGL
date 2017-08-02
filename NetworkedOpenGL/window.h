@@ -4,14 +4,15 @@
 #include <QOpenGLWindow>
 #include <QOpenGLFunctions_4_5_Core>
 #include <QOpenGLShaderProgram>
-#include <QOpenGLBuffer>
-#include <QOpenGLVertexArrayObject>
 #include <QMatrix4x4>
 
 #include <unordered_map>
+#include <memory>
 
 #include "transform3d.h"
 #include "camera.h"
+
+class Player;
 
 class Window :	public QOpenGLWindow,
 				protected QOpenGLFunctions_4_5_Core {
@@ -36,8 +37,7 @@ protected:
 	void mouseReleaseEvent(QMouseEvent* event);
 
 private:
-	QOpenGLBuffer m_vbo;
-	QOpenGLVertexArrayObject m_vao;
+	std::unique_ptr<Player> m_player;
 
 	QMatrix4x4 m_projection;
 

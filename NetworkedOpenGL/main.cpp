@@ -10,6 +10,7 @@ int main(int argc, char* argv[]) {
 	fmt.setProfile(QSurfaceFormat::CoreProfile);
 	fmt.setSamples(4);
 	fmt.setVersion(4, 5);
+	fmt.setSwapInterval(1);
 
 	Window window;
 	window.setFormat(fmt);

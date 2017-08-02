@@ -1,17 +1,13 @@
 #include "window.h"
-#include "vertex.h"
-#include "cube.h"
 #include "input.h"
+#include "player.h"
 
 #include <QKeyEvent>
 #include <QDebug>
-#include <QGuiApplication>
 
 /***********************************************************************************/
 Window::Window() {
 	makeCurrent();
-	m_transform.translate(0.0f, 0.0f, -5.0f);
-	m_transform.scale(0.75f);
 }
 
 /***********************************************************************************/
@@ -22,13 +18,21 @@ Window::~Window() {
 
 /***********************************************************************************/
 void Window::initializeGL() {
-	initializeOpenGLFunctions();
+	if (!initializeOpenGLFunctions()) {
+		throw std::runtime_error("Failed to initalise OpenGL functions.");
+	}
 	connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
 	printContextInfo();
 
+	glFrontFace(GL_CCW);
+	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
+	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	checkGLerror(m_shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/basic.vert"), m_shaderProgram);
@@ -36,22 +40,12 @@ void Window::initializeGL() {
 	checkGLerror(m_shaderProgram.link(), m_shaderProgram);
 	checkGLerror(m_shaderProgram.bind(), m_shaderProgram);
 
-	m_vbo.create();
-	m_vbo.bind();
-	m_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	m_vbo.allocate(vertices, sizeof(vertices));
+	m_player = std::make_unique<Player>("Player");
+	m_player->Translate(QVector3D(0.0f, 0.0f, -2.0f));
 
 	m_uniforms.emplace(std::make_pair<std::string, int>("modelMatrix", m_shaderProgram.uniformLocation("modelMatrix")));
 	m_uniforms.emplace(std::make_pair<std::string, int>("projectionMatrix", m_shaderProgram.uniformLocation("projectionMatrix")));
 	m_uniforms.emplace(std::make_pair<std::string, int>("viewMatrix", m_shaderProgram.uniformLocation("viewMatrix")));
-
-	m_vao.create();
-	m_vao.bind();
-
-	m_shaderProgram.enableAttributeArray(0);
-	m_shaderProgram.enableAttributeArray(1);
-	m_shaderProgram.setAttributeBuffer(0, GL_FLOAT, Vertex::PositionOffset(), 3, Vertex::Stride());
-	m_shaderProgram.setAttributeBuffer(1, GL_FLOAT, Vertex::ColorOffset(), 3, Vertex::Stride());
 
 	if (!m_hasErrors) {
 		qDebug() << "OpenGL sucessfully initialized!";
@@ -61,7 +55,7 @@ void Window::initializeGL() {
 /***********************************************************************************/
 void Window::resizeGL(int width, int height) {
 	m_projection.setToIdentity();
-	m_projection.perspective(45.0f, width / static_cast<float>(height), 0.5f, 10.0f);
+	m_projection.perspective(45.0f, width / static_cast<float>(height), 1.0f, 100.0f);
 }
 
 /***********************************************************************************/
@@ -70,10 +64,10 @@ void Window::paintGL() {
 
 	m_shaderProgram.bind();
 	m_shaderProgram.setUniformValue(m_uniforms.at("projectionMatrix"), m_projection);
-	m_shaderProgram.setUniformValue(m_uniforms.at("modelMatrix"), m_transform.toMatrix());
 	m_shaderProgram.setUniformValue(m_uniforms.at("viewMatrix"), m_camera.toMatrix());
-	m_vao.bind();
-	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(vertices[0]));
+	m_shaderProgram.setUniformValue(m_uniforms.at("modelMatrix"), m_player->GetPlayerMatrix());
+
+	m_player->Draw();
 }
 
 /***********************************************************************************/
@@ -82,7 +76,6 @@ void Window::shutdownGL() {
 
 /***********************************************************************************/
 void Window::update() {
-	m_transform.rotate(1.0f, QVector3D(0.4f, 0.3f, 0.3f));
 
 	Input::update();
 
@@ -119,7 +112,12 @@ void Window::update() {
 		m_camera.translate(transSpeed * translation);
 	}
 
+	// Will open the network config dialog box (also add check if the window is open)
+	if (Input::keyPressed(Qt::Key_Control) && Input::keyPressed(Qt::Key_C)) {
+		qDebug() << "test";
+	}
 
+	// Schedule window update
 	QOpenGLWindow::update();
 }
 
