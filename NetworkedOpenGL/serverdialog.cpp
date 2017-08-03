@@ -1,12 +1,14 @@
 #include "serverdialog.h"
 #include "ui_serverdialog.h"
 
-#include <QVBoxLayout>
+ServerDialog::ServerDialog(QWidget *parent) : QDialog(parent), ui(new Ui::ServerDialog) {
+	ui->setupUi(this);
+}
 
-#include <QtWidgets>
+ServerDialog::~ServerDialog() {
+	delete ui;
+}
 
-ServerDialog::ServerDialog(QWidget* parent) : QWidget(parent), m_layout(new QVBoxLayout) {
+void ServerDialog::on_buttonBox_rejected() {
 
-	setWindowTitle(tr("Start Server"));
-	setLayout(m_layout);
 }

@@ -23,9 +23,9 @@ SOURCES += main.cpp \
     input.cpp \
     camera.cpp \
     player.cpp \
-    serverdialog.cpp \
     mainwindow.cpp \
-    oglwidget.cpp
+    oglwidget.cpp \
+    serverdialog.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -45,17 +45,18 @@ HEADERS += \
     input.h \
     camera.h \
     player.h \
-    serverdialog.h \
     mainwindow.h \
-    oglwidget.h
+    oglwidget.h \
+    serverdialog.h
 
 RESOURCES += \
-    resources.qrc
+    resources.qrc \
+    qdarkstyle/style.qrc
 
 DISTFILES += \
     Shaders/basic.vert \
     Shaders/basic.frag
 
 FORMS += \
-    serverdialog.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    serverdialog.ui

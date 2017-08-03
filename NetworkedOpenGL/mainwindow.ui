@@ -64,6 +64,9 @@
    <property name="text">
     <string>Start server</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="actionKeyboard_Shortcuts">
    <property name="text">

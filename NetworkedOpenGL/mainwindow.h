@@ -9,8 +9,7 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
 	Q_OBJECT
 
 public:
@@ -22,8 +21,11 @@ private slots:
 
 	void on_actionStart_server_triggered();
 
+	void on_actionConnect_to_server_triggered();
+
 private:
 	Ui::MainWindow* ui;
+
 	ServerDialog m_serverDialog;
 
 };
