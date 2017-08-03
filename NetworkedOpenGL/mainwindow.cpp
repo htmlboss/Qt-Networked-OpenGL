@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "serverdialog.h"
+#include "connectdialog.h"
 
 #include <QDebug>
 #include <QFile>
@@ -47,5 +48,9 @@ void MainWindow::on_actionStart_server_triggered() {
 
 /***********************************************************************************/
 void MainWindow::on_actionConnect_to_server_triggered() {
+	const auto dialog = std::make_unique<ConnectDialog>(this);
 
+	if (dialog->exec()) {
+		// connect to another server
+	}
 }

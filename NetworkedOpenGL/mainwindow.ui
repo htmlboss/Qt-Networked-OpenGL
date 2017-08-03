@@ -59,6 +59,9 @@
    <property name="text">
     <string>Connect to server</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
   </action>
   <action name="actionStart_server">
    <property name="text">
