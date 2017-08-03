@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
+#include <QNetworkInterface>
 
 #include <memory>
 
@@ -23,6 +24,19 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
 		QTextStream ts(&f);
 		qApp->setStyleSheet(ts.readAll());
 	}
+
+	// Get local IP Address and display it in status bar and window title.
+	QString addr;
+	foreach(const QHostAddress& address, QNetworkInterface::allAddresses()) {
+		if (address.protocol() == QAbstractSocket::IPv4Protocol &&
+			address != QHostAddress(QHostAddress::LocalHost) &&
+			address.toString().section(".", -1, -1 ) != "1") {
+
+			addr = address.toString();
+		}
+	}
+	setStatusTip("Local IP Address: " + addr);
+	setWindowTitle("Networked OpenGL | " + addr);
 }
 
 /***********************************************************************************/
