@@ -6,7 +6,7 @@
 #include <QDebug>
 
 /***********************************************************************************/
-OGLWidget::OGLWidget(QWidget* parent) {
+OGLWidget::OGLWidget(QWidget* parent) : QOpenGLWidget{parent} {
 	QSurfaceFormat fmt;
 	fmt.setRenderableType(QSurfaceFormat::OpenGL);
 	fmt.setProfile(QSurfaceFormat::CoreProfile);

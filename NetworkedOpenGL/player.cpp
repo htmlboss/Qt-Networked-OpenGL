@@ -24,7 +24,6 @@ Player::Player(const std::string_view name) : m_name{name} {
 	}
 
 	init();
-	m_position.translate(1.0f, 0.0f, -7.5f);
 }
 #endif
 

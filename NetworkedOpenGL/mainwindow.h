@@ -3,8 +3,6 @@
 
 #include <QMainWindow>
 
-#include "serverdialog.h"
-
 namespace Ui {
 class MainWindow;
 }
@@ -25,9 +23,6 @@ private slots:
 
 private:
 	Ui::MainWindow* ui;
-
-	ServerDialog m_serverDialog;
-
 };
 
 #endif // MAINWINDOW_H

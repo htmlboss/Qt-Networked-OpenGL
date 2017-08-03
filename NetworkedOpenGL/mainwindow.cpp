@@ -1,11 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "serverdialog.h"
+
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow), m_serverDialog() {
+#include <memory>
+
+/***********************************************************************************/
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 	ui->setupUi(this);
 
 	QFile f(":qdarkstyle/style.qss");
@@ -19,18 +24,28 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
 	}
 }
 
+/***********************************************************************************/
 MainWindow::~MainWindow() {
 	delete ui;
 }
 
+/***********************************************************************************/
 void MainWindow::on_actionAbout_Qt_triggered() {
 	QApplication::aboutQt();
 }
 
+/***********************************************************************************/
 void MainWindow::on_actionStart_server_triggered() {
-	m_serverDialog.show();
+	const auto dialog = std::make_unique<ServerDialog>(this);
+
+	if (dialog->exec()) {
+		const auto port = dialog->GetPort();
+		qDebug() << port;
+		// start udp server
+	}
 }
 
+/***********************************************************************************/
 void MainWindow::on_actionConnect_to_server_triggered() {
 
 }
