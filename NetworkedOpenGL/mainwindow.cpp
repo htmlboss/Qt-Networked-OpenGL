@@ -11,6 +11,13 @@
 #include <memory>
 
 /***********************************************************************************/
+// Provide operator<< and operator>> overloads so QVector3D can be serialized into QDataStream
+QDataStream& operator<<(QDataStream& str, const QVector3D& vec) {
+}
+QDataStream& operator>>(QDataStream& str, const QVector3D& vec) {
+}
+
+/***********************************************************************************/
 MainWindow::MainWindow(QWidget* parent) : QMainWindow{parent}, ui{new Ui::MainWindow} {
 	ui->setupUi(this);
 	ui->pushButton->setEnabled(false);
@@ -29,8 +36,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow{parent}, ui{new Ui::MainWi
 	// Get local IP Address and display it in status bar and window title.
 	foreach(const QHostAddress& address, QNetworkInterface::allAddresses()) {
 		if (address.protocol() == QAbstractSocket::IPv4Protocol &&
-			address != QHostAddress(QHostAddress::LocalHost) &&
-			address.toString().section(".", -1, -1 ) != "1") {
+				address != QHostAddress(QHostAddress::LocalHost) &&
+				address.toString().section(".", -1, -1 ) != "1") {
 
 			m_ipAddress = address.toString();
 		}
@@ -52,22 +59,23 @@ void MainWindow::on_actionAbout_Qt_triggered() {
 
 /***********************************************************************************/
 void MainWindow::readyRead() {
-	// When data is coming in
-	QByteArray buffer;
-	buffer.resize(m_udpSocket->pendingDatagramSize());
 
-	QHostAddress sender;
-	quint16 senderPort;
+	while (m_udpSocket->hasPendingDatagrams()) {
+		// When data is coming in
+		QByteArray buffer(m_udpSocket->pendingDatagramSize(), Qt::Uninitialized);
 
-	// Try to write incoming data to buffer.
-	if (m_udpSocket->readDatagram(buffer.data(), buffer.size(), &sender, &senderPort) == -1) {
-		qDebug() << "Failed to read datagram from host: " << sender << " on port " << senderPort;
-		return;
+		QHostAddress sender;
+		quint16 senderPort;
+
+		// Try to write incoming data to buffer.
+		if (m_udpSocket->readDatagram(buffer.data(), buffer.size(), &sender, &senderPort) == -1) {
+			qDebug() << "Failed to read datagram from host: " << sender << " on port " << senderPort;
+		}
+
+		qDebug() << "Data from: " << sender.toString();
+		qDebug() << "Remote port: " << senderPort;
+		qDebug() << buffer;
 	}
-
-	qDebug() << "Data from: " << sender.toString();
-	qDebug() << "Remote port: " << senderPort;
-	qDebug() << buffer;
 }
 
 /***********************************************************************************/
