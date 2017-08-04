@@ -25,8 +25,7 @@ SOURCES += main.cpp \
     player.cpp \
     mainwindow.cpp \
     oglwidget.cpp \
-    serverdialog.cpp \
-    connectdialog.cpp
+    serverdialog.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -48,8 +47,7 @@ HEADERS += \
     player.h \
     mainwindow.h \
     oglwidget.h \
-    serverdialog.h \
-    connectdialog.h
+    serverdialog.h
 
 RESOURCES += \
     resources.qrc \
@@ -61,5 +59,4 @@ DISTFILES += \
 
 FORMS += \
     mainwindow.ui \
-    serverdialog.ui \
-    connectdialog.ui
+    serverdialog.ui

@@ -33,6 +33,34 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Remote IP</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="remoteIPlineEdit">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Remote UDP Port</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="remoteUdpLineEdit">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QLabel" name="label">
      <property name="minimumSize">
       <size>
@@ -41,12 +69,12 @@
       </size>
      </property>
      <property name="text">
-      <string>UDP Port #</string>
+      <string>Local UDP Port</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="udpLineEdit">
+    <widget class="QLineEdit" name="localUdpLineEdit">
      <property name="maxLength">
       <number>10</number>
      </property>
