@@ -11,10 +11,26 @@
 #include <memory>
 
 /***********************************************************************************/
-// Provide operator<< and operator>> overloads so QVector3D can be serialized into QDataStream
-QDataStream& operator<<(QDataStream& str, const QVector3D& vec) {
+// Helper function to de-serialize a stream into T
+template<typename T>
+auto get(QDataStream& str) -> T {
+	T value;
+	str >> value;
+	return value;
 }
-QDataStream& operator>>(QDataStream& str, const QVector3D& vec) {
+
+/***********************************************************************************/
+// Provide operator<< and operator>> overloads so QVector3D can be serialized into QDataStream
+// and vice versa
+QDataStream& operator<<(QDataStream& str, const QVector3D& vec) {
+	// Send components in reverse order so they get de-serialized in correct order.
+	return str << vec.z() << vec.y() << vec.x();
+}
+QDataStream& operator>>(QDataStream& str, QVector3D& vec) {
+	vec = QVector3D(get<float>(str),
+					get<float>(str),
+					get<float>(str));
+	return str;
 }
 
 /***********************************************************************************/
@@ -60,21 +76,26 @@ void MainWindow::on_actionAbout_Qt_triggered() {
 /***********************************************************************************/
 void MainWindow::readyRead() {
 
+	QHostAddress sender;
+	quint16 senderPort;
+
+	QVector3D vec;
+
 	while (m_udpSocket->hasPendingDatagrams()) {
 		// When data is coming in
 		QByteArray buffer(m_udpSocket->pendingDatagramSize(), Qt::Uninitialized);
-
-		QHostAddress sender;
-		quint16 senderPort;
+		QDataStream str(&buffer, QIODevice::ReadOnly);
 
 		// Try to write incoming data to buffer.
 		if (m_udpSocket->readDatagram(buffer.data(), buffer.size(), &sender, &senderPort) == -1) {
 			qDebug() << "Failed to read datagram from host: " << sender << " on port " << senderPort;
 		}
 
+		str >> vec;
+
 		qDebug() << "Data from: " << sender.toString();
 		qDebug() << "Remote port: " << senderPort;
-		qDebug() << buffer;
+		qDebug() << vec.x() << " " << vec.y() << " " << vec.z();
 	}
 }
 
@@ -108,8 +129,9 @@ void MainWindow::on_actionOpen_network_connection_triggered() {
 
 void MainWindow::on_pushButton_clicked() {
 	QByteArray data;
+	QDataStream str(&data, QIODevice::WriteOnly);
 
-	data.append("Hello from udp");
+	str << QVector3D(2, 3, 4);
 
 	m_udpSocket->writeDatagram(data, m_remoteIPaddress, m_remotePort);
 }
